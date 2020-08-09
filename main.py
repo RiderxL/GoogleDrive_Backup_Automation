@@ -11,10 +11,14 @@ prompts = [
 
 class Drive:
     def upload(self, file_path):
-       folder_id = os.getenv('GOOGLE_DRIVE_FOLDER_ID')
-       filename_with_ext = os.path.basename(file_path)
-       filename, file_ext = os.path.splitext(filename_with_ext)
+        gauth = GoogleAuth()
+        gauth.LocalWebserverAuth()
         
+        drive = GoogleDrive(gauth)
+        f = drive.CreateFile()
+        f.SetContentFile(file_path)
+        f.Upload()
+
     def download(self):
         print("Download File")
     
@@ -25,12 +29,12 @@ class Drive:
         print("List File")
 
 class Main(Drive):
-    def __init__(self, command, usr_input, file_path):
+    def __init__(self, command, file_path):
         self.command = command
-        self.usr_input = usr_input
+        self.file_path = file_path
         
     def process_choice(self, choice):
-        functions = {'up' : self.upload(file_path),
+        functions = {'up' : self.upload(self.file_path),
                     'dl' : self.download,
                     'cr' : self.create,
                     'ls' : self.list_file}
@@ -50,7 +54,7 @@ if __name__ == "__main__":
     
     curr_input = input("Input choice and file: ")
     
-    command, usr_input, file_path = curr_input.split()
-    main = Main(command, usr_input)
+    command, file_path = map(str, curr_input.split())
+    main = Main(command, file_path)
     
     main.process_choice(command)

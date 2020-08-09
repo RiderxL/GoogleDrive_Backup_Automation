@@ -26,3 +26,6 @@ gauth.SaveCredentialsFile(credential_file)
         logger.exception('Failed to upload %s', file_path)
     # end try
     return None
+
+for x in map(int, input().split()):
+    # code here
